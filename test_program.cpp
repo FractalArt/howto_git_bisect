@@ -3,5 +3,6 @@ using namespace std;
 
 int main() {
     cout << "\nA nice test program\n" << endl;
-    return 0;
+    int error_code = 0;
+    return error_code;
 }
