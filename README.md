@@ -140,11 +140,64 @@ int main() {
 }
 ```
 
-Next commit this change and as well add the README.md and .gitignore files to
-the repository.
+Next commit this change and as well add this README.md and the .gitignore files
+to the repository.
 
 ```
 $ git commit test_program.cpp -m "BUGGY COMMIT"
 $ git add README.md
 $ git commit -m "Added README.md"
+$ git add .gitignore
+$ git commit -m "Added .gitignore"
+```
+
+Using Git Bisect
+----------------
+
+In this section we use the *git bisect* command together with our python script
+to find the faulty commit, which we know from the last section to be the
+third-but-last one. First let us look at the log of our repository:
+
+```
+$ git log --pretty=oneline
+9bba0b7924a1de313dc44bc52b8578c85669e78d Added .gitignore
+031a1b7c55d30b1ff5fb155d2acd452268a801e2 Added README.md
+2fae7187089d7940917dfa46cfa3f1f396d3b15d BUGGY COMMIT
+ac0f77bb5e52efbe0b144d4e3d595dac67fe27d9 Added error_code variable.
+c3fb9d482f7bec886378256fb326f4e18ece34c8 Add some output.
+2a3716bd0f6ac2e43881809b9e85241d433e8ef9 Version 1 of the test program.
+83c76f071fd00fa44458990902cd8187c9aae361 Added the bisect script.
+```
+
+Assume we do not know which commit introduced the bug. We only know that it
+happened between the commit where we added the first version labeled by
+*2a3716bd* and the last commit *HEAD*. This is where *git bisect* is useful,
+since it allows to tell us that it happened in *BUGGY COMMIT*. To run it, just
+type:
+
+```
+git bisect start HEAD 2a3716bd
+git bisect run python bisect.py
+```
+
+After trying some commits which always print the output of the C++ program,
+git bisect finally ends with:
+
+```
+2fae7187089d7940917dfa46cfa3f1f396d3b15d is the first bad commit
+commit 2fae7187089d7940917dfa46cfa3f1f396d3b15d
+Author:
+Date:   Sat Mar 24 13:25:37 2018 +0100
+
+    BUGGY COMMIT
+
+:100644 100644 fc6abca981785eb2ae32c86df22bd69d98667e56 56eb0a9ab64e1ca4cfe1dab37c21d84496d4a614 M	test_program.cpp
+bisect run success
+
+```
+
+It worked. Now get back to the master branch by running:
+
+```
+$ git bisect reset
 ```
