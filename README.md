@@ -11,8 +11,8 @@ The Python script
 
 Let us first take a look at the python script that the *git bisect* command
 will be running on a series of commits to find the first commit for which the
-script returns a non-zero value, indicating that an error has occured. This
-way the commit introducing faulty behaviour can be identified.  
+script returns a non-zero value, indicating that an error has occurred. This
+way the commit introducing faulty behavior can be identified.  
 The code of the script is as such:
 
 ```python
@@ -20,13 +20,13 @@ import sys
 import subprocess
 
 def bisect():
-    # First compile the programm named 'test_program'
+    # First compile the program named 'test_program'
     cmd = ['g++', '-o', 'test_program', 'test_program.cpp']
     subprocess.run(cmd)
     # Then run the program and check whether it works correctly. If an error
     # occurs, a non-zero value is returned and 'subprocess.check_call' raises
     # an exception. If we catch this exception, we return its error code to the
-    # system which lets git bisect know that an error occured. If the exception
+    # system which lets git bisect know that an error occurred. If the exception
     # is not raised we just return 0 to the system.
     try:
         subprocess.check_call('./test_program')
@@ -40,13 +40,13 @@ if __name__ == "__main__":
 
 The content of the script should be clear from the comments. The function
 *bisect* is defined which, when called, first compiles our program and then
-runs it. If the program does not return 0, i.e. an error occured, its error
+runs it. If the program does not return 0, i.e. an error occurred, its error
 code is propagated to the system, else 0 is returned to the system.
 
 The C++ test program
 --------------------
 
-Now it is time to write our first version of the progam 'test_program' which
+Now it is time to write our first version of the program `test_program` which
 is saved in *test_program.cpp*:
 
 ```C++
@@ -81,7 +81,7 @@ $ echo  $?
 From now on, we will make a few changes to the code and commit them. At some
 point we will deliberately change the return value from 0 to a non-zero value
 and use *git bisect* to find the commit in which this happens. So let's
-change the return value back to zero and the first version to the repo.
+change the return value back to zero and add the first version to the repo.
 
 ```
 $ git add test_program.cpp
@@ -106,7 +106,7 @@ and commit it
 $ git commit test_program.cpp -m "Add some output."
 ```
 
-Next we a variable containing the error code which will be returned:
+Next we add a variable containing the error code which will be returned:
 
 ```C++
 #include <iostream>
@@ -140,7 +140,7 @@ int main() {
 }
 ```
 
-Next commit this change and as well add this README.md and the .gitignore files
+Let us commit this change and as well add this README.md and the .gitignore files
 to the repository.
 
 ```
